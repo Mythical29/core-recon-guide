@@ -6,7 +6,7 @@ Keep it simple. Zero bloat.
 
 ***
 
-## 1. emails & usernames 
+## 1. Emails & usernames 
 
 When you have a target email, your goal is to see where it lives without tipping the guy off. 
 
@@ -14,13 +14,13 @@ When you have a target email, your goal is to see where it lives without tipping
 * **[Holehe](https://github.com/megadose/holehe)** — CLI python tool. You run `holehe target@email.com` and it checks that email against ~120 sites (Twitter, Instagram, Imgur, etc) using their "Forgot Password" functions. It drops the connection right before sending the actual recovery email, so it's completely silent. 
 * **[IntelX](https://intelx.io/)** — Sinks an email or domain into deep-web archives. If the target's email was caught in a 2017 LinkedIn breach or a random Pastebin dump, it spits out the raw plaintext file. 
 
-## 2. mapping infrastructure
+## 2. Mapping infrastructure
 
-* **[SpiderFoot](https://github.com/smicallef/spiderfoot)** — The heavy hitter. Give it a domain or an IP, set it strictly to **Passive Mode**, and go make a coffee. It cross-references a hundred different open APIs to draw a giant map of their subdomains, whois history, and associated netblocks. *(Keep it passive—active mode touches their live server and leaves your IP in their logs).*
+* **[SpiderFoot](https://github.com/smicallef/spiderfoot)** — The heavy hitter. Give it an email address, domain or an IP, set it strictly to **Passive Mode**, and go make a coffee. It cross-references a hundred different open APIs to draw a giant map of their subdomains, whois history, and associated netblocks. *(Keep it passive—active mode touches their live server and leaves your IP in their logs).*
 * **[DNSDumpster](https://dnsdumpster.com/)** — Free web tool. Spits out a visual map of a domain's DNS routing (MX records, host servers) in 4 seconds. Good for a quick glance before you fire up heavier scripts.
 * **[Shodan](https://www.shodan.io/)** — Google searches websites; Shodan searches open ports. You use this to find the stuff the sysadmin forgot to put behind a login screen (open webcams, unpatched RDP ports, raw elasticsearch databases). 
 
-## 3. sketchy files & links
+## 3. Sketchy files & links
 
 Never double-click a random `.pdf` or `.exe` on your bare host machine just to see what it is. 
 
@@ -28,7 +28,7 @@ Never double-click a random `.pdf` or `.exe` on your bare host machine just to s
 * **[Hybrid Analysis](https://www.hybrid-analysis.com/)** — If VirusTotal just gives you a generic "Malicious" tag, drop it here. It drops the file into a live virtual machine, takes actual desktop screenshots of what the malware did, and hands you the `.pcap` network traffic file.
 * **[IPQualityScore](https://www.ipqualityscore.com/)** — Underrated. Normal IP checkers just tell you "This IP is in Chicago." IPQS does deep behavioral checks to tell you *"This is a residential proxy being used by a botnet in Chicago."* Great for checking if an IP hitting your site is a real human or a scraper.
 
-## 4. hashes & cracking
+## 4. Hashes & cracking
 
 When you actually get your hands on a dump of password hashes, your local machine has to do the math.
 
@@ -39,12 +39,19 @@ When you actually get your hands on a dump of password hashes, your local machin
 * **`rockyou.txt`** — The classic. Originating from a 2009 breach, it’s a `.txt` file of 14 million real passwords. Because human psychology never changes, running a basic attack with RockYou still cracks roughly 30% of legacy user dumps today. 
 * **[SecLists](https://github.com/danielmiessler/SecLists)** — Go star this repo right now. It’s the master archive. It doesn't just hold passwords; it holds wordlists for web-directory fuzzing, common default router logins, and SQL injection payloads.
 
-## 5. preservation (bellingcat style)
+## 5. Preservation (bellingcat style)
 
 If you find something juicy, gather it instantly. If the target realizes they are being looked at, they will delete the post 10 minutes later.
 
 * **[Archive.today](https://archive.ph/)** — Paste a URL in here immediately. It takes an immutable, server-side snapshot of the page. Even if the guy deletes his website tomorrow, you have the proof. Bonus: viewing an `archive.ph` link prevents the target's site from running IP-loggers on your browser.
 * **[SunCalc](https://www.suncalc.org/)** — Classic geo-location trick. If you have an outdoor photo of a target and you know roughly what city they are in, match the angle of the physical shadows in the picture to the SunCalc interface to figure out the exact hour and minute the photo was snapped.
+
+## 6. The massive fallback directories
+
+When the tools above don't cut it and you have to go down an obscure rabbit hole (like tracking a dark-web crypto wallet or analyzing a weird file format), stop guessing and check the master indexes:
+
+* **[Bellingcat's Online Investigation Toolkit](https://bellingcat.gitbook.io/toolkit/)** — The literal gold standard. Maintained by human journalists who verify the links monthly. It breaks tools down by super niche categories (satellite mapping, global flight trackers, maritime databases). 
+* **[OSINT Framework](https://osintframework.com/)** — The legendary interactive tree. You just click what you have (e.g., "Domain Name"), and the tree branches out into 20 different sub-categories of tools you can use to exploit it.
 
 ***
 
