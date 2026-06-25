@@ -1,58 +1,119 @@
-# my-osint-toolkit / the stuff that actually works
+# core-recon-guide
 
-Most OSINT repositories on GitHub are a massive graveyard of 400 broken links to tools that got shut down in 2018. I got tired of bookmarking garbage, so I scraped the actual high-utility stuff from the Bellingcat guides, OSINT Framework, and my own notes. 
+A working reference of OSINT, recon, and threat-intel tools — organized by what you're starting with, not by category buzzwords. these are tools i've actually run,no gimmicks 
 
-Keep it simple. Zero bloat.
+## contents
+1. [emails, usernames, and account lookup](#1-emails-usernames-and-account-lookup)
+2. [images, media, and visual lookup](#2-images-media-and-visual-lookup)
+3. [domains, infrastructure, and public footprint](#3-domains-infrastructure-and-public-footprint)
+4. [phone numbers](#4-phone-numbers)
+5. [social media and people search](#5-social-media-and-people-search)
+6. [geolocation and chronolocation](#6-geolocation-and-chronolocation)
+7. [breach and dark web monitoring](#7-breach-and-dark-web-monitoring)
+8. [malware and file analysis](#8-malware-and-file-analysis)
+9. [archives and historical data](#9-archives-and-historical-data)
+10. [frameworks and meta-tools](#10-frameworks-and-meta-tools)
+11. [a note on use](#a-note-on-use)
 
-***
+---
 
-## 1. Emails & usernames 
+## 1. Emails, usernames, and account lookup
+when you only have an email or a username, these are the first tools i check.
 
-When you have a target email, your goal is to see where it lives without tipping the guy off. 
+* **[Epieos](https://epieos.com/)** — reverse email lookup. good for google-linked public info and connected account clues.
+* **[GHunt](https://github.com/mxrch/ghunt)** — reverse google account lookup. useful when the email belongs to a google account.
+* **[holehe](https://github.com/megadose/holehe)** — reverse email registration check. shows where an email may already be registered.
+* **[Sherlock](https://github.com/sherlock-project/sherlock)** — reverse username lookup. checks where a handle appears online.
+* **[Maigret](https://github.com/soxoj/maigret)** — reverse username lookup. broader than sherlock in many cases.
+* **[theHarvester](https://github.com/laramies/theHarvester)** — email and domain footprint lookup. good for finding public emails, names, and subdomains.
+* **[Have I Been Pwned](https://haveibeenpwned.com/)** — breach exposure check for an email address.
+* **[Intelligence X (intelx.io)](https://intelx.io/)** — search engine for leaked data, breach dumps, and historical web/account records tied to an email or username.
+* **[OSINT Industries](https://osint.industries/)** — reverse email/phone lookup that pulls linked accounts across dozens of platforms in one pass.
 
-* **[Epieos](https://epieos.com/)** — Put an email in here. It queries Google server-side. It pulls their Google ID, their Google Maps review history, calendar settings, and their public Google account photo. The target gets zero notification that you just looked them up. 
-* **[Holehe](https://github.com/megadose/holehe)** — CLI python tool. You run `holehe target@email.com` and it checks that email against ~120 sites (Twitter, Instagram, Imgur, etc) using their "Forgot Password" functions. It drops the connection right before sending the actual recovery email, so it's completely silent. 
-* **[IntelX](https://intelx.io/)** — Sinks an email or domain into deep-web archives. If the target's email was caught in a 2017 LinkedIn breach or a random Pastebin dump, it spits out the raw plaintext file. 
+## 2. Images, media, and visual lookup
+when you only have a picture, these are the main tools.
 
-## 2. Mapping infrastructure
+* **[Google Lens](https://lens.google/)** — reverse image lookup. best for broad general search.
+* **[Yandex Images](https://yandex.com/images/)** — reverse image lookup. strong for finding similar visual matches.
+* **[TinEye](https://tineye.com/)** — reverse image lookup. good for exact copies and old image traces.
+* **[Bing Visual Search](https://www.bing.com/visualsearch)** — reverse image lookup. another solid backup.
+* **[ExifTool](https://exiftool.org/)** — metadata lookup for images, pdfs, audio, and video.
+* **[InVID WeVerify](https://www.invid-project.eu/tools-and-services/invid-weverify/)** — video and image verification tool.
+* **[Photo Forensics](https://fotoforensics.com/)** — basic image manipulation check.
 
-* **[SpiderFoot](https://github.com/smicallef/spiderfoot)** — The heavy hitter. Give it an email address, domain or an IP, set it strictly to **Passive Mode**, and go make a coffee. It cross-references a hundred different open APIs to draw a giant map of their subdomains, whois history, and associated netblocks. *(Keep it passive—active mode touches their live server and leaves your IP in their logs).*
-* **[DNSDumpster](https://dnsdumpster.com/)** — Free web tool. Spits out a visual map of a domain's DNS routing (MX records, host servers) in 4 seconds. Good for a quick glance before you fire up heavier scripts.
-* **[Shodan](https://www.shodan.io/)** — Google searches websites; Shodan searches open ports. You use this to find the stuff the sysadmin forgot to put behind a login screen (open webcams, unpatched RDP ports, raw elasticsearch databases). 
+## 3. Domains, infrastructure, and public footprint
+when you have a domain, ip, or org name, these help map the outside.
 
-## 3. Sketchy files & links
+* **[SpiderFoot](https://github.com/smicallef/spiderfoot)** — passive recon and footprint mapping.
+* **[OWASP Amass](https://owasp.org/www-project-amass/)** — subdomain and attack-surface discovery.
+* **[DNSDumpster](https://dnsdumpster.com/)** — quick dns and subdomain overview.
+* **[Shodan](https://www.shodan.io/)** — search for exposed services and devices.
+* **[urlscan.io](https://urlscan.io/)** — website and link analysis.
+* **[crt.sh](https://crt.sh/)** — certificate transparency search for subdomains.
+* **[SecurityTrails](https://securitytrails.com/)** — dns history and domain intelligence.
 
-Never double-click a random `.pdf` or `.exe` on your bare host machine just to see what it is. 
+## 4. Phone numbers
+when all you've got is a number.
 
-* **[VirusTotal](https://www.virustotal.com/)** — The baseline. Upload a file/URL and it checks the hash against 70+ antivirus engines. Don't just look at the red/green score; check the **Relations** tab to see what external IP addresses the file tries to call home to once it executes.
-* **[Hybrid Analysis](https://www.hybrid-analysis.com/)** — If VirusTotal just gives you a generic "Malicious" tag, drop it here. It drops the file into a live virtual machine, takes actual desktop screenshots of what the malware did, and hands you the `.pcap` network traffic file.
-* **[IPQualityScore](https://www.ipqualityscore.com/)** — Underrated. Normal IP checkers just tell you "This IP is in Chicago." IPQS does deep behavioral checks to tell you *"This is a residential proxy being used by a botnet in Chicago."* Great for checking if an IP hitting your site is a real human or a scraper.
+* **[PhoneInfoga](https://github.com/sundowndev/phoneinfoga)** — open-source, pulls carrier info, line type, and social/public footprint from a number.
+* **[NumLookup](https://www.numlookup.com/)** — free reverse phone lookup, decent for quick caller-ID style results.
+* **[Truecaller](https://www.truecaller.com/)** — crowd-sourced caller ID. especially strong in regions (like india) with heavy adoption.
+* **[Twilio Lookup](https://www.twilio.com/docs/lookup)** — api-based, returns carrier, line type (mobile/landline/voip), and porting history.
 
-## 4. Hashes & cracking
+## 5. Social media and people search
+broader identity work once you've got a name, handle, or partial match.
 
-When you actually get your hands on a dump of password hashes, your local machine has to do the math.
+* **[Social Analyzer](https://github.com/qeeqbox/social-analyzer)** — automated profile detection across 1000+ sites with confidence scoring, not just a yes/no hit.
+* **[WhatsMyName](https://github.com/WebBreacher/WhatsMyName)** — username enumeration, complements sherlock/maigret with a different site list.
+* **[NameChk](https://namechk.com/)** — checks username availability across platforms — useful as the inverse of enumeration (tells you where a handle is *not* taken, which narrows things too).
+* **[FastPeopleSearch](https://www.fastpeoplesearch.com/)** — free people-search aggregator, decent for cross-referencing US names/addresses/relatives.
 
-* **[John The Ripper](https://github.com/openwall/john)** — `john --wordlist=rockyou.txt hashes.txt`. Uses your CPU. It's smart enough to auto-detect what kind of hash you just fed it (MD5, SHA1, etc). Best for quick offline jobs.
-* **[Hashcat](https://hashcat.net/hashcat/)** — The one you use when John isn't fast enough. It offloads the math to your Graphics Card (GPU) to brute-force millions of combos a second. 
+## 6. Geolocation and chronolocation
+matching a photo to a place, and a place to a time.
 
-#### the wordlists:
-* **`rockyou.txt`** — The classic. Originating from a 2009 breach, it’s a `.txt` file of 14 million real passwords. Because human psychology never changes, running a basic attack with RockYou still cracks roughly 30% of legacy user dumps today. 
-* **[SecLists](https://github.com/danielmiessler/SecLists)** — Go star this repo right now. It’s the master archive. It doesn't just hold passwords; it holds wordlists for web-directory fuzzing, common default router logins, and SQL injection payloads.
+* **[SunCalc](https://www.suncalc.org/)** — sun position and shadow-angle analysis. pairs a date + coordinates with the lighting in an image to narrow down time of day.
+* **[Wikimapia](https://wikimapia.org/)** — crowd-tagged landmarks, good for matching distinctive buildings that Google Maps doesn't label well.
+* **[Overpass Turbo](https://overpass-turbo.eu/)** — queries raw OpenStreetMap data directly. useful for matching infrastructure (bridge shapes, rail layouts, road patterns) instead of relying on satellite imagery alone.
+* **[Wigle.net](https://wigle.net/)** — searchable database of wifi networks and cell towers by SSID/BSSID — niche, but genuinely underrated for narrowing a location from network names.
+* **[PeakFinder](https://www.peakfinder.org/)** — matches mountain/skyline silhouettes to a real location. underused outside outdoor/hiking contexts but works well for terrain-based geolocation.
+* **[Google Earth Pro (3D)](https://www.google.com/earth/about/versions/)** — skyline and building-angle matching against a real 3D model of the area.
 
-## 5. Preservation (bellingcat style)
+## 7. Breach and dark web monitoring
+tracking exposed credentials and leaked data.
 
-If you find something juicy, gather it instantly. If the target realizes they are being looked at, they will delete the post 10 minutes later.
+* **[DeHashed](https://dehashed.com/)** — freemium breach search engine, broader index than HIBP, searchable by email, username, IP, name, or phone.
+* **[LeakCheck](https://leakcheck.io/)** — breach database lookup with a usable free tier.
+* **[breach.house](https://breach.house/)** — community-tracked aggregator of disclosed breaches.
+* **[databreach.com](https://databreach.com/)** — breach disclosure tracking and news.
+* **[Ahmia](https://ahmia.fi/)** — search engine indexing .onion sites that opt in to being searchable. the safer entry point if you need to reference dark web content without manually browsing onion directories.
 
-* **[Archive.today](https://archive.ph/)** — Paste a URL in here immediately. It takes an immutable, server-side snapshot of the page. Even if the guy deletes his website tomorrow, you have the proof. Bonus: viewing an `archive.ph` link prevents the target's site from running IP-loggers on your browser.
-* **[SunCalc](https://www.suncalc.org/)** — Classic geo-location trick. If you have an outdoor photo of a target and you know roughly what city they are in, match the angle of the physical shadows in the picture to the SunCalc interface to figure out the exact hour and minute the photo was snapped.
+## 8. Malware and file analysis
+sandboxing suspicious files without touching them locally — used directly in the Dynamic Threat Intel section of my portfolio.
 
-## 6. The massive fallback directories
+* **[Triage (tria.ge)](https://tria.ge/)** — interactive sandbox, free community tier, signup doesn't require a business email. what i used for the AgentTesla writeup.
+* **[ANY.RUN](https://any.run/)** — interactive sandbox with live VM detonation and a public task feed. free tier currently requires a business email or Discord-channel verification for personal accounts.
+* **[Hybrid Analysis](https://www.hybrid-analysis.com/)** — free sandbox (Falcon Sandbox backend), strong on IOC and YARA-rule output.
+* **[VirusTotal](https://www.virustotal.com/)** — multi-engine AV/URL scanning, also correlates IOCs across previously submitted samples.
+* **[MalwareBazaar](https://bazaar.abuse.ch/)** — public malware sample repository, browsable by family/signature. the actual source for the AgentTesla sample in my sandbox writeup.
+* **[MITRE ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/)** — not a sandbox, but maps observed sandbox behavior to formal adversary tactics/techniques — useful for writing up findings properly instead of just listing IOCs.
 
-When the tools above don't cut it and you have to go down an obscure rabbit hole (like tracking a dark-web crypto wallet or analyzing a weird file format), stop guessing and check the master indexes:
+## 9. Archives and historical data
+recovering deleted or changed content.
 
-* **[Bellingcat's Online Investigation Toolkit](https://bellingcat.gitbook.io/toolkit/)** — The literal gold standard. Maintained by human journalists who verify the links monthly. It breaks tools down by super niche categories (satellite mapping, global flight trackers, maritime databases). 
-* **[OSINT Framework](https://osintframework.com/)** — The legendary interactive tree. You just click what you have (e.g., "Domain Name"), and the tree branches out into 20 different sub-categories of tools you can use to exploit it.
+* **[Wayback Machine](https://web.archive.org/)** — historical snapshots of websites, deleted-page recovery.
+* **[archive.today](https://archive.ph/)** — manual on-demand archiving, useful for capturing a page before it changes or disappears.
+* **[CachedView](https://cachedview.nl/)** — quick aggregator pulling cached versions across multiple cache sources at once.
 
-***
+## 10. Frameworks and meta-tools
+the directories and orchestration layers that tie everything above together.
 
-**quick opsec note:** Passive recon is just looking at public billboards; it's legal. Active scanning (firing nmap at some company's live server without written permission) is how you get a polite knock on the door from a guy in a windbreaker. Know the difference.
+* **[OSINT Framework](https://osintframework.com/)** — visual directory of OSINT tools by category. good as a starting map when you don't know what you're looking for yet.
+* **[IntelTechniques](https://inteltechniques.com/tools/)** — Michael Bazzell's toolset and methodology, especially strong for search-engine dorking and people search.
+* **[Maltego](https://www.maltego.com/)** — entity correlation and link-analysis across multi-variable datasets. used throughout the CTF writeups in my portfolio.
+* **[SpiderFoot](https://github.com/smicallef/spiderfoot)** — also functions as an orchestrator running 200+ modules automatically once you give it a single starting point (email, domain, IP, etc).
+
+---
+
+## a note on use
+
+everything above is meant for lawful, consent-based investigation: checking your own exposure, authorized engagements, journalism, research, or CTF/training exercises. a fair number of these tools — breach lookups, facial/image search, phone and people lookups — can just as easily be misused for stalking or harassment. that's not what this list is for. if you wouldn't be comfortable explaining why you ran a lookup to the person it's about, don't run it.
